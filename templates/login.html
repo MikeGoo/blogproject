@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="col-md-12">
+<div class="containter">
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">登录</h3>
+				</div>
+				<div class="panel-body">
+					<form action="" method="POST">
+						{% csrf_token %}
+						{% for field in form %}
+						<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+						{{ field }}
+						<p class="text-danger">{{ field.errors.as_text }}</p>
+						{% endfor %}
+						<span class="pull-left text-danger">{{ form.non_field_errors }}</span>
+						<input type="submit" value="登录" class="btn btn-primary" >
+							<span class="pull-right">
+								<span>没有账户，请点击</span>
+								<a href="{% url 'blog:register' %}?from={{ previous_url }}" class="btn btn-success">注册</a>
+							</span>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+</main>
+
+
+
+
+
+{% endblock %}

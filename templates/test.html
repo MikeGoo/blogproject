@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script>
+		function change_value(value){
+			val = document.getElementById("val");
+			val.value = value;
+			title = document.getElementById('title');
+			title.innerHTML = '修改之后的value';
+		}
+	</script>
+	<span id="title" style="display: block;">修改之前的value</span>
+	<input id="val" type="text" value=0 style="display: block;">
+	<button onclick="change_value({{ value }})"><a href="#">改变value</a></button>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="col-md-12">
+<div class="containter">
+	<div class="row">
+		<div class="col-xs-4 col-xs-offset-4">
+			<div class="panel panel-default">
+	    		<div class="panel-heading">用户信息</div>
+	    		{% if user.is_authenticated %}
+		    	<div class="panel-body">
+		    		<div class="user_message" style="margin-bottom: 10px;">
+		    			<span style="font-size: 1.2em;color:#5DADE2;">用户名：</span>
+		    			<span style="font-size: 1.2em;">{{ user }}</span>
+		    		</div>
+		    		<div class="user_message" style="margin-bottom: 10px;">
+		    			<span style="font-size: 1.2em;color:#5DADE2;">等级：</span>
+		    			<span style="font-size: 1.2em;">/</span>
+		    		</div>
+		    		<div class="user_message" style="margin-bottom: 10px;">
+		    			<span style="font-size: 1.2em;color:#5DADE2;">个人积分：</span>
+		    			<span style="font-size: 1.2em;">10000</span>
+		    		</div>
+		    	</div>
+		    	{% else %}
+		    	<div class="panel-body">
+		    		<div class="user_message" style="margin-bottom: 10px;text-align: center;">
+		    			<span style="font-size: 1.2em;color:#5DADE2;">请登录后查看信息</span>
+		    		</div>
+		    	</div>
+		    	{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load blog_tags %}
+{% block content %}
+<main class="col-md-8">
+{% if error_msg %}
+    <p>{{ error_msg }}</p>
+{% endif %}
+	{% for article in articles %}
+        <article class="post post-1">
+            <header class="entry-header">
+                <h1 class="entry-title">
+                	<a href="{% url 'blog:detail' article.id %}">{{ article.title }}</a>       
+                </h1>
+                    <div class="entry-meta">
+                        <span class="post-category"><a href="#">{{ article.category }}</a></span>
+                        <span class="post-date"><a href="#"><time class="entry-date"
+                                                                      datetime="2012-11-09T23:15:57+00:00">{{ article.create_time.year }}年{{ article.create_time.month }}月{{ article.create_time.day }}日</time></a></span>
+                        <span class="post-author"><a href="#">{{ article.author }}</a></span>
+                        <span class="comments-link"><a href="#">{{ article.comment_set.count }}评论</a></span>
+                        <span class="views-count"><a href="#">{{ article.get_view }}阅读</a></span>
+                    </div>
+            </header>
+                <div class="entry-content clearfix">
+                    {{ article.abstract }}
+                    <div class="read-more cl-effect-14">
+                        <a href="{% url 'blog:detail' article.id %}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                    </div>
+                </div>
+        </article>
+    {% empty %}
+    暂无文章！
+    {% endfor %}
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if first %}
+            <a href="?page=1">1</a>
+        {% endif %}
+        {% if left %}
+            {% if left_has_more %}
+                <span>...</span>
+            {% endif %}
+            {% for i in left %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endfor %}
+        {% endif %}
+        <a href="?page={{ page_obj.number }}" style="color:red">{{ page_obj.number }}</a>
+        {% if right %}
+            {% for i in right %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endfor %}
+        {% endif %}
+        {% if right_has_more %}
+            <span>...</span>
+        {% endif %}
+        {% if last %}
+            <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</main>
+    <aside class="col-md-4">
+        <div class="widget widget-recent-posts">
+            <h3 class="widget-title">最新文章</h3>
+            {% get_recent_articles as recent_article_list %}
+            <ul>
+                {% for article in recent_article_list %}
+                <li>
+                    <a href="{% url 'blog:detail' article.id %}">{{ article.title }}</a>
+                </li>
+                {% empty %}
+                暂无最新文章！
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="widget widget-archives">
+            <h3 class="widget-title">归档</h3>
+            {% archives as date_list %}
+            <ul>
+                {% for date in date_list %}
+                <li>
+                    <a href="{% url 'blog:archives' date.year date.month %}">{{ date.year }} 年 {{ date.month }} 月</a>
+                </li>
+                {% empty %}
+                暂无归档！
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="widget widget-category">
+            <h3 class="widget-title">分类</h3>
+            {% get_categorys as category_list %}
+            <ul>
+                {% for category in category_list %}
+                <li>
+                    <a href="{% url 'blog:category' category.pk %}">{{ category.name }} <span class="post-count">({{ category.articles_num }})</span></a>
+                </li>
+                {% empty %}
+                暂无分类！
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="widget widget-tag-cloud">
+            <h3 class="widget-title">标签云</h3>
+            {% get_tags as tags %}
+            <ul>
+                {% for tag in tags %}
+                <li>
+                    <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+                </li>
+                {% empty %}
+                暂无标签！
+                {% endfor %}
+            </ul>
+        </div>
+    </aside>
+{% endblock content %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<style type="text/css">
+    div.django-ckeditor-widget{
+        width: 100%;
+    }
+</style>
+<main class="col-md-12">
+	<article class="post post-1">
+        <header class="entry-header">
+            <h1 class="entry-title">{{ article.title }}</h1>
+            <div class="entry-meta">
+                <span class="post-category"><a href="#">{{ article.category }}</a></span>
+                <span class="post-date"><a href="#"><time class="entry-date"
+                                                          datetime="2012-11-09T23:15:57+00:00">{{ article.create_time.year }}年{{ article.create_time.month }}月{{ article.create_time.day }}日</time></a></span>
+                <span class="post-author"><a href="#">{{ article.author }}</a></span>
+                <span class="comments-link"><a href="#">{{ article.comment_set.count }}评论</a></span>
+                <span class="views-count"><a href="#">{{ article.get_view }}阅读</a></span>
+            </div>
+        </header>
+        <div class="entry-content clearfix">
+            <p>
+            	{{ article.content|safe }}
+            </p>
+        </div>
+    </article>
+    <section class="comment-area" id="comment-area">
+        <hr>
+        <h3 id="reply">发表评论</h3>
+        <div class="comment">
+            {% if not request.user.is_authenticated %}
+            <div class="row">
+                <div class="col-md-4 pull-right" >
+                    <span>请登录后发表评论</span>
+                    <a href="{% url 'blog:login' %}?from={{ request.get_full_path }}" class="btn btn-default">登录/注册</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="comment_submit">
+                <form action="{% url 'comments:article_comment' article.pk %}" method="post" class="comment-form">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="{{ comment_form.text.id_for_label }}"></label>
+                            {{ comment_form.text }}
+                            {{ comment_form.text.errors }}
+                            {{ comment_form.reply_comment_id }}
+                            <button type="submit" class="btn btn-primary pull-right">发表评论</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="comment-list-panel" style="background-color: #F2F3F4;padding: 20px;">
+            <h3>评论列表，共 <span>{{ article.comment_set.count }}</span> 条评论</h3>
+            <ul class="comment-list list-unstyled">
+                {% for comment in comment_list %}
+                <li class="comment-item">
+                    <span class="nickname">{{ comment.user.username }}</span>
+                    <time class="submit-date">{{ comment.create_time }}</time>
+                    <div class="text">
+                        {{ comment.text|safe }}
+                        <button onclick="reply('{{ comment.user.username }}',{{ comment.id }})"><a href="#reply" style="color:#5DADE2">回复</a></button>
+                    </div>
+                    {% for reply in comment.comments_for_this_root.all %}
+                    <div class="text" style="margin-left: 1em;">
+                        <time class="submit-date">{{ reply.create_time }}</time>
+                        <span class="nickname">{{ reply.user.username }}回复{{ reply.parent.user.username }}</span>
+                        {{ reply.text|safe }}
+                        <button onclick="reply('{{ reply.user.username }}',{{ reply.id }})"><a href="#reply" style="color:#5DADE2">回复</a></button>
+                    </div>
+                    {% endfor %}
+                </li>
+                {% empty %}
+                暂无评论
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    <script>
+        function reply(reply_to,reply_id){
+            text = document.getElementById("reply");
+            text.innerHTML='回复'+reply_to+':';
+            id = document.getElementById("reply_comment_id");
+            id.value = reply_id;
+        }
+    </script>
+</main>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="col-md-12">
+	<h1 class="page-title">个人简介</h1>
+	<article class="post">
+		<div class="entry-content clearfix">
+			<figure class="img-responsive-center">
+				<img class="img-responsive" src="{% static 'blog/image/me.jpg' %}" alt="Developer Image">
+			</figure>
+			<p>人生苦短，我用Python。</p>
+			<p>Python自学者，Django学习中...</p>
+			<div class="height-40px"></div>
+			<h2 class="title text-center">社交</h2>
+			<ul class="social">
+				<li class="facebook"><a href="#"><span class="ion-social-facebook"></span></a></li>
+				<li class="twitter"><a href="#"><span class="ion-social-twitter"></span></a></li>
+				<li class="google-plus"><a href="#"><span class="ion-social-googleplus"></span></a></li>
+				<li class="tumblr"><a href="#"><span class="ion-social-tumblr"></span></a></li>
+			</ul>
+		</div>
+	</article>
+</main>
+{% endblock %}
