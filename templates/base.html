@@ -55,14 +55,13 @@
                             {% if not request.user.is_authenticated %}
                             <li class="cl-effect-11"><a href="{% url 'blog:login' %}?from={{ request.get_full_path }}" data-hover="登录/注册">登录/注册</a></li>
                             {% else %}
-                            <!-- <li class="cl-effect-11"><a href="{% url 'blog:personal_center' %}?from={{ request.get_full_path }}" >{{ user }}</a></li> -->
                             <li role="presentation" class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <a class="dropdown-toggle action" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     {{ user }}<span class="caret"></span>
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <a href="{% url 'blog:personal_center' %}?from={{ request.get_full_path }}" style="display: block;font-size: 1.2em;">个人资料</a>
-                                    <a href="{% url 'logout' %}?from={{ request.get_full_path }}" style="display: block;font-size: 1.2em;">退出</a>
+                                <ul class="dropdown-menu"  aria-labelledby="dropdownMenu1">
+                                    <li><a href="{% url 'blog:personal_center' %}?from={{ request.get_full_path }}" style="font-size: 1.2em;">个人资料</a></li>
+                                    <li><a href="{% url 'logout' %}?from={{ request.get_full_path }}" style="font-size: 1.2em;">退出</a></li>
                                 </ul>
                             </li>
                             {% endif %}
@@ -113,11 +112,16 @@
             <li><a href="{% url 'blog:blog_view' %}">博客</a></li>
             <li><a href="{% url 'blog:about' %}">关于</a></li>
             <li><a href="{% url 'blog:contact' %}">联系</a></li>
+            {% if not request.user.is_authenticated %}
+            <li><a href="{% url 'blog:login' %}?from={{ request.get_full_path }}">登录/注册</a></li>
+            {% else %}
+            <li><a href="{% url 'blog:personal_center' %}?from={{ request.get_full_path }}">{{ user }}</a></li>
+            <li><a href="{% url 'logout' %}?from={{ request.get_full_path }}">退出登录</a></li>
+            {% endif %}
         </ul>
     </nav>
 </div>
 
 <script src="{% static 'blog/js/script.js' %}"></script>
-
 </body>
 </html>

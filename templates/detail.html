@@ -37,7 +37,7 @@
             </div>
             {% else %}
             <div class="comment_submit">
-                <form action="{% url 'comments:article_comment' article.pk %}" method="post" class="comment-form">
+                <form id="comment-form" action="{% url 'comments:article_comment'%}" method="post" class="comment-form">
                 {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
@@ -45,7 +45,8 @@
                             {{ comment_form.text }}
                             {{ comment_form.text.errors }}
                             {{ comment_form.reply_comment_id }}
-                            <button type="submit" class="btn btn-primary pull-right">发表评论</button>
+                            {{ comment_form.article_id }}
+                            <button id="submit-comment" type="submit" class="btn btn-primary pull-right">发表评论</button>
                         </div>
 
                     </div>
@@ -56,11 +57,11 @@
 
         <div class="comment-list-panel" style="background-color: #F2F3F4;padding: 20px;">
             <h3>评论列表，共 <span>{{ article.comment_set.count }}</span> 条评论</h3>
-            <ul class="comment-list list-unstyled">
+            <ul id="comment-list" class="comment-list list-unstyled">
                 {% for comment in comment_list %}
                 <li class="comment-item">
                     <span class="nickname">{{ comment.user.username }}</span>
-                    <time class="submit-date">{{ comment.create_time }}</time>
+                    <time class="submit-date">{{ comment.create_time|date:"Y-m-d H:i" }}</time>
                     <div class="text">
                         {{ comment.text|safe }}
                         <button onclick="reply('{{ comment.user.username }}',{{ comment.id }})"><a href="#reply" style="color:#5DADE2">回复</a></button>
@@ -82,11 +83,30 @@
     </section>
     <script>
         function reply(reply_to,reply_id){
-            text = document.getElementById("reply");
-            text.innerHTML='回复'+reply_to+':';
-            id = document.getElementById("reply_comment_id");
-            id.value = reply_id;
+            $("#reply").text('回复'+reply_to+':');
+            $("#reply_comment_id").val(reply_id);
         }
+        $("#comment-form").submit(function(){
+            // 更新数据到textarea
+            CKEDITOR.instances['id_text'].updateElement();
+            // 异步提交评论
+            $.ajax({
+                url: "{% url 'comments:article_comment' %}",
+                type: "POST",
+                data: $(this).serialize(),
+                cache: false,
+                success: function(data){
+                    console.log(data);
+                    var commentHtml ='<li style="color: #777;font-size: 14px;">'+data['username']+' · '+data['comment_time']+'</li>'+'<span style="padding-top: 5px;font-size: 16px;">'+data['text']+'</span>'+'<button><a href="#reply" style="color:#5DADE2">回复</a></button>';
+                    $("#comment-list").prepend(commentHtml);
+                    CKEDITOR.instances['id_text'].setData('');
+                },
+                error: function(xhr){
+                    console.log(xhr);
+                },
+            });
+            return false;
+        });
     </script>
 </main>
 {% endblock %}

@@ -2,8 +2,38 @@
 <html>
 <head>
 	<title></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
 </head>
 <body>
+	
+	<style type="text/css">
+		.test:hover{background:red;}
+		.ttt button:hover{background-color: red;}
+		.dd:hover{color:red;}
+	</style>
+	<span id="title" style="display: block;">修改之前的value</span>
+	<input id="val" type="text" value=0 style="display: block;">
+	<button onclick="change_value({{ value }})"><a href="#">改变value</a></button>
+
+	<div class="row">
+		<div class="col-md-4 text-center"><button class="test" >哈哈哈</button></div>
+		<div class="col-md-4"><abbr title="lalala">abbr</abbr></div>
+		<div class="col-md-4">哈哈哈3</div>
+	</div>
+	<ul class="list-unstyled list-inline">
+		<li style="padding: 0 20px;"><kbd>Ctrl</kbd></li>
+		<li style="padding: 0 20px;">列表</li>
+		<li style="padding: 0 20px;">列表</li>
+		<li style="padding: 0 20px;">列表</li>
+	</ul>
+
+	<div class="ttt">
+		<button>啦啦啦</button>
+	</div>
+	<a class="dd" href="">啦啦啦</a>
+	<input id="text" type="text" name="text">
+	<button id="submit">提交</button>
+
 	<script>
 		function change_value(value){
 			val = document.getElementById("val");
@@ -11,10 +41,9 @@
 			title = document.getElementById('title');
 			title.innerHTML = '修改之后的value';
 		}
+		$("#submit").click(function(){
+			$.post("{% url 'comments:test' %}",$("#text").text())
+		});
 	</script>
-	<span id="title" style="display: block;">修改之前的value</span>
-	<input id="val" type="text" value=0 style="display: block;">
-	<button onclick="change_value({{ value }})"><a href="#">改变value</a></button>
-
 </body>
 </html>

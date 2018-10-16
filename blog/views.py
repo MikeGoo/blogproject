@@ -13,7 +13,7 @@ class IndexView(ListView):
 	model = Article
 	template_name = 'index.html'
 	context_object_name = 'articles'
-	paginate_by = 2
+	paginate_by = 10
 	# 为首页设置页码
 	def get_context_data(self,**kwargs):
 		context = super().get_context_data(**kwargs)
@@ -102,7 +102,7 @@ class ArticleDetailView(DetailView):
 	def get_context_data(self,**kwargs):
 		context = super(ArticleDetailView,self).get_context_data(**kwargs)
 		# 实例化评论表单，并将reply_comment_id初始化为0
-		comment_form = CommentForm(initial={'reply_comment_id':0})
+		comment_form = CommentForm(initial={'reply_comment_id':0,'article_id':self.get_object().pk})
 		# 将root为空的评论过滤过来，设置到评论列表的最顶级
 		comment_list = self.object.comment_set.filter(root=None)
 		context.update({
@@ -136,7 +136,7 @@ class TagView(IndexView):
 		tag = get_object_or_404(Tags,pk=self.kwargs.get('pk'))
 		return super().get_queryset().filter(tag=tag)
 
-# 设置博客涨势也
+# 设置博客展示页
 class BlogView(ListView):
 	model = Article
 	template_name = 'index.html'
@@ -206,3 +206,4 @@ def reg_view(request):
 # 简陋个人中心
 def personal_center_view(request):
 	return render(request,'personal_center.html')
+

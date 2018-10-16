@@ -16,4 +16,5 @@ urlpatterns=[
 	path('login/',views.login_view,name='login'),
 	path('register/',views.reg_view,name='register'),
 	path('personal_center/',views.personal_center_view,name='personal_center'),
+	path('submit_comment/',views.personal_center_view,name='personal_center'),
 ]
